@@ -1,14 +1,14 @@
 {
-  "name": "command-palette",
-  "version": "0.39.1",
-  "main": "./lib/command-palette-view",
-  "description": "Find and run available commands using `cmd-shift-p` (macOS) or `ctrl-shift-p` (Linux/Windows).",
+  "name": "quick-palette",
+  "version": "0.39.2",
+  "main": "./lib/quick-palette-view",
+  "description": "Command Palette with ability to open faster. Use `cmd-shift-p` (macOS) or `ctrl-shift-p` (Linux/Windows).",
   "activationCommands": {
     "atom-workspace": [
-      "command-palette:toggle"
+      "quick-palette:toggle"
     ]
   },
-  "repository": "https://github.com/atom/command-palette",
+  "repository": "https://github.com/jordwalke/command-palette",
   "license": "MIT",
   "engines": {
     "atom": "*"

@@ -7,6 +7,10 @@ module.exports =
 class CommandPaletteView extends SelectListView
 
   @config:
+    maxItems:
+      type: 'number'
+      default: 15
+      description: "Maximum number of results to show. Lower numbers make it much faster."
     useAlternateScoring:
       type: 'boolean'
       default: true
@@ -18,10 +22,11 @@ class CommandPaletteView extends SelectListView
 
   @activate: ->
     view = new CommandPaletteView
-    @disposable = atom.commands.add 'atom-workspace', 'command-palette:toggle', -> view.toggle()
+    @disposable = atom.commands.add 'atom-workspace', 'quick-palette:toggle', -> view.toggle()
 
   @deactivate: ->
     @disposable.dispose()
+    @maxItemsSubscription?.dispose()
     @scoreSubscription?.dispose()
     @preserveLastSearchSubscription?.dispose()
 
@@ -30,13 +35,16 @@ class CommandPaletteView extends SelectListView
   initialize: ->
     super
 
-    @addClass('command-palette')
+    @setMaxItems(atom.config.get 'quick-palette.maxItems')
+    @addClass('quick-palette')
 
-    @alternateScoring = atom.config.get 'command-palette.useAlternateScoring'
-    @scoreSubscription = atom.config.onDidChange 'command-palette.useAlternateScoring', ({newValue}) => @alternateScoring = newValue
+    @alternateScoring = atom.config.get 'quick-palette.useAlternateScoring'
+    @scoreSubscription = atom.config.onDidChange 'quick-palette.useAlternateScoring', ({newValue}) => @alternateScoring = newValue
 
-    @preserveLastSearch = atom.config.get 'command-palette.preserveLastSearch'
-    preserveLastSearchSubscription = atom.config.onDidChange 'command-palette.preserveLastSearch', ({newValue}) => @preserveLastSearch = newValue
+    @maxItemsSubscription = atom.config.onDidChange 'quick-palette.maxItems', ({newValue}) => @setMaxItems(newValue)
+    
+    @preserveLastSearch = atom.config.get 'quick-palette.preserveLastSearch'
+    preserveLastSearchSubscription = atom.config.onDidChange 'quick-palette.preserveLastSearch', ({newValue}) => @preserveLastSearch = newValue
     @lastSearch = ''
 
   getFilterKey: ->
@@ -141,7 +149,7 @@ class CommandPaletteView extends SelectListView
     if filteredItems.length
       @setError(null)
 
-      for i in [0...Math.min(filteredItems.length, @maxItems)]
+      for i in [0...Math.min(filteredItems.length, 10)]
         item = filteredItems[i]
         itemView = $(@viewForItem(item))
         itemView.data('select-list-item', item)

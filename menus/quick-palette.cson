@@ -3,8 +3,8 @@
     'label': 'View'
     'submenu': [
       {
-        'label': 'Toggle Command Palette'
-        'command': 'command-palette:toggle'
+        'label': 'Toggle Quick Palette'
+        'command': 'quick-palette:toggle'
       }
     ]
   }
@@ -12,11 +12,11 @@
     'label': 'Packages'
     'submenu': [
       {
-        'label': 'Command Palette',
+        'label': 'Quick Palette',
         'submenu': [
           {
             'label': 'Toggle'
-            'command': 'command-palette:toggle'
+            'command': 'quick-palette:toggle'
           }
         ]
       }
